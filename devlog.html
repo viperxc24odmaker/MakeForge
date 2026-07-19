@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Devlog — MakeForge</title>
+<style>
+  :root{
+    --bg:#141009; --panel:#1e170f; --panel-alt:#241b12; --line:#332a1f;
+    --text:#f6f1ea; --muted:#9c8f7d; --muted-dim:#6f6455;
+    --orange:#f2701a; --orange-soft:#ff9248; --orange-dim:#c9560f;
+    --mono:'SF Mono',ui-monospace,'Cascadia Code',Menlo,Consolas,monospace;
+    --sans:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    background:radial-gradient(ellipse 900px 400px at 50% -10%, rgba(242,112,26,0.08), transparent 60%), var(--bg);
+    color:var(--text);font-family:var(--sans);min-height:100vh;
+  }
+  .topbar{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:16px 28px;border-bottom:1px solid var(--line);
+    background:rgba(20,16,9,0.85);backdrop-filter:blur(10px);position:sticky;top:0;z-index:10;
+  }
+  .back-link{
+    font-family:var(--mono);font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--muted);text-decoration:none;display:flex;align-items:center;gap:6px;transition:.2s;
+  }
+  .back-link:hover{color:var(--orange)}
+  .title-block h1{font-size:16px;font-weight:800;letter-spacing:-.01em;margin:0}
+  .title-block h1 span{color:var(--orange)}
+
+  .content{max-width:760px;margin:0 auto;padding:56px 24px}
+
+  .intro{text-align:center;margin-bottom:50px}
+  .intro .eyebrow{
+    display:inline-flex;align-items:center;gap:8px;
+    font-family:var(--mono);font-size:10.5px;letter-spacing:.22em;text-transform:uppercase;
+    color:var(--orange-soft);background:rgba(242,112,26,0.08);border:1px solid rgba(242,112,26,0.25);
+    padding:6px 14px;border-radius:999px;margin-bottom:20px;
+  }
+  .intro .eyebrow::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--orange);box-shadow:0 0 8px var(--orange)}
+  .intro h2{font-size:clamp(28px,5.5vw,42px);letter-spacing:-.02em;font-weight:800;margin-bottom:12px}
+  .intro h2 span{color:var(--orange)}
+  .intro p{color:var(--muted);font-size:15px;max-width:480px;margin:0 auto}
+
+  .timeline{position:relative;padding-left:28px}
+  .timeline::before{
+    content:"";position:absolute;left:6px;top:6px;bottom:6px;width:2px;
+    background:linear-gradient(180deg, var(--orange-dim), var(--line) 90%);
+  }
+
+  .entry{position:relative;margin-bottom:38px}
+  .entry::before{
+    content:"";position:absolute;left:-28px;top:6px;width:13px;height:13px;border-radius:50%;
+    background:var(--orange);box-shadow:0 0 0 4px rgba(242,112,26,0.15);
+  }
+  .entry-date{
+    font-family:var(--mono);font-size:11px;letter-spacing:.15em;color:var(--muted-dim);
+    text-transform:uppercase;margin-bottom:8px;
+  }
+  .entry-card{
+    background:var(--panel);border:1px solid var(--line);border-radius:14px;
+    padding:22px 24px;box-shadow:0 10px 26px rgba(0,0,0,0.22);
+  }
+  .entry-tag{
+    display:inline-block;font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--orange-soft);background:rgba(242,112,26,0.08);border:1px solid rgba(242,112,26,0.22);
+    padding:4px 10px;border-radius:999px;margin-bottom:12px;
+  }
+  .entry-card h3{font-size:19px;letter-spacing:-.01em;margin-bottom:10px}
+  .entry-card p{color:var(--muted);font-size:14.5px;line-height:1.7}
+  .entry-card ul{margin:10px 0 0;padding-left:18px;color:var(--muted);font-size:14.5px;line-height:1.8}
+  .entry-card li::marker{color:var(--orange-soft)}
+
+  .end-marker{
+    text-align:center;font-family:var(--mono);font-size:11px;letter-spacing:.15em;
+    color:var(--muted-dim);text-transform:uppercase;margin-top:10px;
+  }
+
+  footer{margin-top:50px;text-align:center;font-family:var(--mono);font-size:11px;color:var(--muted-dim);letter-spacing:.15em;text-transform:uppercase;padding-bottom:24px}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a href="index.html" class="back-link">← MakeForge</a>
+  <div class="title-block"><h1>Dev<span>log</span></h1></div>
+  <div style="width:90px"></div>
+</div>
+
+<div class="content">
+
+  <div class="intro">
+    <div class="eyebrow">Build Log</div>
+    <h2>Behind the <span>Forge</span></h2>
+    <p>A running log of what's getting built, shipped, and broken along the way.</p>
+  </div>
+
+  <div class="timeline">
+
+    <div class="entry">
+      <div class="entry-date">July 19, 2026</div>
+      <div class="entry-card">
+        <span class="entry-tag">Milestone</span>
+        <h3>MakeForge is live</h3>
+        <p>Day one. Studio name locked, brand mark designed, and the site went live on GitHub Pages — free hosting, zero cost, real URL. Everything from here builds on this foundation.</p>
+      </div>
+    </div>
+
+    <div class="entry">
+      <div class="entry-date">July 19, 2026</div>
+      <div class="entry-card">
+        <span class="entry-tag">Tool Shipped</span>
+        <h3>Pixel Studio v1.0</h3>
+        <p>First real tool under the MakeForge name. A full sprite and animation editor built in a single file, no dependencies.</p>
+        <ul>
+          <li>Pencil, eraser, fill bucket, and eyedropper tools</li>
+          <li>Multi-frame animation with live preview</li>
+          <li>Export as PNG or full spritesheet</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="entry">
+      <div class="entry-date">July 19, 2026</div>
+      <div class="entry-card">
+        <span class="entry-tag">Tool Shipped</span>
+        <h3>CACIG v1.0</h3>
+        <p>The Custom App Creation Idea Generator — built to solve MakeForge's own "what do I build next" problem.</p>
+        <ul>
+          <li>Randomly combines type, feature, and twist into a real idea</li>
+          <li>Filter by category and difficulty</li>
+          <li>Favorites and history, saved locally</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="end-marker">// More entries soon</div>
+
+</div>
+
+<footer>MakeForge © 2026 — Build · Ship · Forge</footer>
+
+</body>
+</html>

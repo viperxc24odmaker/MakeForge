@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CACIG — MakeForge</title>
+<style>
+  :root{
+    --bg:#141009; --panel:#1e170f; --panel-alt:#241b12; --line:#332a1f;
+    --text:#f6f1ea; --muted:#9c8f7d; --muted-dim:#6f6455;
+    --orange:#f2701a; --orange-soft:#ff9248; --orange-dim:#c9560f;
+    --green:#4ade80; --blue:#60a5fa; --pink:#f472b6;
+    --mono:'SF Mono',ui-monospace,'Cascadia Code',Menlo,Consolas,monospace;
+    --sans:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    background:radial-gradient(ellipse 900px 400px at 50% -10%, rgba(242,112,26,0.08), transparent 60%), var(--bg);
+    color:var(--text);font-family:var(--sans);min-height:100vh;
+  }
+  .topbar{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:16px 28px;border-bottom:1px solid var(--line);
+    background:rgba(20,16,9,0.85);backdrop-filter:blur(10px);position:sticky;top:0;z-index:10;
+  }
+  .back-link{
+    font-family:var(--mono);font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--muted);text-decoration:none;display:flex;align-items:center;gap:6px;transition:.2s;
+  }
+  .back-link:hover{color:var(--orange)}
+  .title-block{display:flex;align-items:center;gap:10px}
+  .title-block h1{font-size:16px;font-weight:800;letter-spacing:-.01em;margin:0}
+  .title-block h1 span{color:var(--orange)}
+  .title-block .badge{
+    font-family:var(--mono);font-size:9px;letter-spacing:.15em;text-transform:uppercase;
+    color:var(--orange-soft);background:rgba(242,112,26,0.1);border:1px solid rgba(242,112,26,0.25);
+    padding:3px 9px;border-radius:999px;
+  }
+
+  .content{padding:32px 24px;max-width:1100px;margin:0 auto}
+
+  .intro{text-align:center;margin-bottom:34px}
+  .intro h2{font-size:clamp(26px,5vw,38px);letter-spacing:-.02em;font-weight:800;margin-bottom:10px}
+  .intro h2 span{color:var(--orange)}
+  .intro p{color:var(--muted);font-size:15px;max-width:480px;margin:0 auto}
+
+  .filters{
+    display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-bottom:28px;
+  }
+  .filter-group{display:flex;flex-direction:column;gap:6px}
+  .filter-group label{font-family:var(--mono);font-size:10px;letter-spacing:.15em;color:var(--muted);text-transform:uppercase}
+  select{
+    background:var(--panel-alt);color:var(--text);border:1px solid var(--line);
+    border-radius:8px;padding:10px 14px;font-family:var(--sans);font-size:13px;min-width:160px;cursor:pointer;
+  }
+
+  .generate-row{display:flex;justify-content:center;margin-bottom:36px}
+  .btn-generate{
+    font-family:var(--mono);font-size:13px;letter-spacing:.15em;text-transform:uppercase;
+    padding:16px 40px;border-radius:11px;border:none;cursor:pointer;
+    background:linear-gradient(135deg,var(--orange-soft),var(--orange-dim));color:#17130f;font-weight:700;
+    box-shadow:0 10px 28px rgba(242,112,26,0.3);transition:.2s;
+  }
+  .btn-generate:hover{filter:brightness(1.08);transform:translateY(-1px)}
+  .btn-generate:active{transform:translateY(0)}
+
+  .idea-card{
+    background:var(--panel);border:1px solid var(--line);border-radius:18px;
+    padding:34px;margin-bottom:32px;box-shadow:0 14px 40px rgba(0,0,0,0.3);
+    display:none;
+  }
+  .idea-card.show{display:block;animation:fadeIn .3s ease}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+  .idea-top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap;margin-bottom:18px}
+  .idea-badges{display:flex;gap:8px;flex-wrap:wrap}
+  .pill{
+    font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;
+    padding:5px 12px;border-radius:999px;border:1px solid var(--line);color:var(--muted);
+  }
+  .pill.type{color:var(--blue);border-color:rgba(96,165,250,0.3);background:rgba(96,165,250,0.08)}
+  .pill.diff-beginner{color:var(--green);border-color:rgba(74,222,128,0.3);background:rgba(74,222,128,0.08)}
+  .pill.diff-intermediate{color:var(--orange-soft);border-color:rgba(242,112,26,0.3);background:rgba(242,112,26,0.08)}
+  .pill.diff-advanced{color:var(--pink);border-color:rgba(244,114,182,0.3);background:rgba(244,114,182,0.08)}
+
+  .star-btn{
+    background:var(--panel-alt);border:1px solid var(--line);color:var(--muted);
+    width:40px;height:40px;border-radius:10px;cursor:pointer;font-size:18px;
+    display:flex;align-items:center;justify-content:center;transition:.15s;
+  }
+  .star-btn:hover{border-color:var(--orange)}
+  .star-btn.saved{color:var(--orange-soft);border-color:var(--orange-dim);background:rgba(242,112,26,0.1)}
+
+  .idea-codename{font-size:clamp(24px,4vw,32px);font-weight:800;letter-spacing:-.02em;margin-bottom:10px}
+  .idea-codename span{color:var(--orange)}
+  .idea-desc{color:var(--text);font-size:16px;line-height:1.7;margin-bottom:20px}
+
+  .idea-parts{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-top:20px;padding-top:20px;border-top:1px solid var(--line)}
+  .idea-part .lbl{font-family:var(--mono);font-size:9.5px;letter-spacing:.15em;color:var(--muted-dim);text-transform:uppercase;margin-bottom:4px}
+  .idea-part .val{font-size:14.5px;color:var(--text);font-weight:600}
+
+  .empty-state{
+    text-align:center;padding:60px 20px;border:1px dashed var(--line);border-radius:18px;
+    color:var(--muted);margin-bottom:32px;
+  }
+  .empty-state .icon{font-size:36px;margin-bottom:12px}
+
+  .tabs{display:flex;gap:8px;margin-bottom:18px;border-bottom:1px solid var(--line)}
+  .tab{
+    font-family:var(--mono);font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;
+    padding:12px 18px;background:none;border:none;color:var(--muted);cursor:pointer;
+    border-bottom:2px solid transparent;transition:.15s;
+  }
+  .tab.active{color:var(--orange-soft);border-color:var(--orange)}
+  .tab-content{display:none}
+  .tab-content.active{display:block}
+
+  .list-item{
+    display:flex;align-items:center;justify-content:space-between;gap:14px;
+    background:var(--panel);border:1px solid var(--line);border-radius:12px;
+    padding:16px 18px;margin-bottom:10px;
+  }
+  .list-item .li-main{flex:1}
+  .list-item .li-title{font-weight:700;font-size:14.5px;margin-bottom:3px}
+  .list-item .li-meta{font-family:var(--mono);font-size:10.5px;color:var(--muted-dim);letter-spacing:.08em;text-transform:uppercase}
+  .list-item .li-actions{display:flex;gap:8px}
+  .li-btn{
+    background:var(--panel-alt);border:1px solid var(--line);color:var(--muted);
+    width:32px;height:32px;border-radius:8px;cursor:pointer;font-size:14px;
+    display:flex;align-items:center;justify-content:center;transition:.15s;
+  }
+  .li-btn:hover{border-color:var(--orange);color:var(--orange)}
+
+  .clear-row{display:flex;justify-content:flex-end;margin-bottom:14px}
+  .clear-btn{
+    font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--muted-dim);background:none;border:1px solid var(--line);padding:8px 14px;border-radius:8px;cursor:pointer;
+  }
+  .clear-btn:hover{color:var(--pink);border-color:var(--pink)}
+
+  footer{margin-top:40px;text-align:center;font-family:var(--mono);font-size:11px;color:var(--muted-dim);letter-spacing:.15em;text-transform:uppercase;padding-bottom:24px}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a href="index.html" class="back-link">← MakeForge</a>
+  <div class="title-block">
+    <h1>CAC<span>IG</span></h1>
+    <span class="badge">v1.0</span>
+  </div>
+  <div style="width:90px"></div>
+</div>
+
+<div class="content">
+
+  <div class="intro">
+    <h2>Custom App Creation <span>Idea Generator</span></h2>
+    <p>Stuck on what to build next? Hit generate and let MakeForge cook up something worth making.</p>
+  </div>
+
+  <div class="filters">
+    <div class="filter-group">
+      <label>Category</label>
+      <select id="categoryFilter">
+        <option value="any">Any</option>
+        <option value="game">Game</option>
+        <option value="app">App</option>
+        <option value="tool">Tool</option>
+        <option value="web">Web</option>
+      </select>
+    </div>
+    <div class="filter-group">
+      <label>Difficulty</label>
+      <select id="difficultyFilter">
+        <option value="any">Any</option>
+        <option value="beginner">Beginner</option>
+        <option value="intermediate">Intermediate</option>
+        <option value="advanced">Advanced</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="generate-row">
+    <button class="btn-generate" id="generateBtn">⚡ Generate Idea</button>
+  </div>
+
+  <div class="empty-state" id="emptyState">
+    <div class="icon">💡</div>
+    <div>No idea forged yet — hit the button above.</div>
+  </div>
+
+  <div class="idea-card" id="ideaCard">
+    <div class="idea-top">
+      <div class="idea-badges">
+        <span class="pill type" id="typeBadge">Type</span>
+        <span class="pill" id="diffBadge">Difficulty</span>
+      </div>
+      <button class="star-btn" id="starBtn" title="Save to favorites">☆</button>
+    </div>
+    <div class="idea-codename" id="ideaCodename"></div>
+    <div class="idea-desc" id="ideaDesc"></div>
+    <div class="idea-parts">
+      <div class="idea-part"><div class="lbl">Core Feature</div><div class="val" id="featureVal"></div></div>
+      <div class="idea-part"><div class="lbl">The Twist</div><div class="val" id="twistVal"></div></div>
+      <div class="idea-part"><div class="lbl">Category</div><div class="val" id="categoryVal"></div></div>
+    </div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" data-tab="favorites">★ Favorites</button>
+    <button class="tab" data-tab="history">🕓 History</button>
+  </div>
+
+  <div class="tab-content active" id="favoritesTab">
+    <div class="clear-row"><button class="clear-btn" id="clearFavBtn">Clear Favorites</button></div>
+    <div id="favoritesList"></div>
+  </div>
+
+  <div class="tab-content" id="historyTab">
+    <div class="clear-row"><button class="clear-btn" id="clearHistBtn">Clear History</button></div>
+    <div id="historyList"></div>
+  </div>
+
+</div>
+
+<footer>MakeForge © 2026 — Build · Ship · Forge</footer>
+
+<script>
+(function(){
+  "use strict";
+
+  const TYPES = {
+    game: ["2D Platformer","Roguelike Dungeon Crawler","Puzzle Game","Idle/Incremental Game","Tower Defense","Card Battler","Minecraft Mod","Endless Runner","Physics Sandbox","Story-Driven Narrative Game"],
+    app: ["Mobile Companion App","Budget Tracker","Recipe Organizer","Habit Tracker","Journal App","Music Discovery App","Local Event Finder","Study Flashcard App"],
+    tool: ["Browser-Based Editor","Code Snippet Manager","Sprite/Asset Generator","Color Palette Tool","File Converter","Automation Script","Dev Dashboard","Data Visualizer"],
+    web: ["Portfolio Site Generator","Interactive Landing Page","Web-Based Game Engine Demo","Community Forum","Collaborative Whiteboard","Live Chat Widget","Simple CMS","Link-in-Bio Page Builder"]
+  };
+
+  const FEATURES = [
+    "Real-time multiplayer","Offline-first (works with no internet)","AI-generated content","Procedural generation","Drag-and-drop builder interface",
+    "Voice control","Cloud save & sync","Leaderboards & achievements","Custom theming/skins","One-click export/share",
+    "Gesture/touch controls","Daily challenges","Built-in tutorial/onboarding","Community-submitted content","Live collaborative editing",
+    "Progressive difficulty scaling","Randomized events","Data import/export (CSV/JSON)","Notification/reminder system","Modular plugin system"
+  ];
+
+  const TWISTS = [
+    "must work entirely offline, no accounts","designed for one-handed use only","has zero menus — everything is one screen","must be usable in under 60 seconds",
+    "has a built-in easter egg hunt","auto-generates its own content daily","works fully via keyboard, no mouse","has a strict retro/pixel-only aesthetic",
+    "includes a surprise minigame hidden inside","must fit in a single HTML file","has a companion mode for a second device","includes an ASCII-art mode",
+    "has no color — grayscale only by default","includes a speedrun/time-attack mode","must be fully playable/usable on a school computer","has a built-in soundtrack you compose yourself",
+    "supports import from a spreadsheet","has a 'chaos mode' toggle that breaks the rules","includes a built-in changelog the user writes themselves","must work without JavaScript frameworks — vanilla only"
+  ];
+
+  const ADJECTIVES = ["Iron","Ember","Shadow","Crimson","Silent","Rogue","Neon","Frost","Wild","Obsidian","Solar","Cinder","Hollow","Rusty","Wandering","Feral","Gilded","Static","Molten","Echo"];
+  const NOUNS = ["Forge","Nexus","Drift","Anvil","Signal","Warden","Circuit","Grove","Vault","Beacon","Loom","Pulse","Ridge","Compass","Ember","Relay","Cipher","Haven","Spire","Current"];
+
+  let currentIdea = null;
+  let favorites = loadJSON('cacig_favorites', []);
+  let history = loadJSON('cacig_history', []);
+
+  function loadJSON(key, fallback){
+    try{
+      const raw = localStorage.getItem(key);
+      return raw ? JSON.parse(raw) : fallback;
+    }catch(e){ return fallback; }
+  }
+  function saveJSON(key, val){
+    try{ localStorage.setItem(key, JSON.stringify(val)); }catch(e){ /* storage unavailable, fail silently */ }
+  }
+
+  function pick(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+
+  function generateIdea(){
+    const catFilter = document.getElementById('categoryFilter').value;
+    const diffFilter = document.getElementById('difficultyFilter').value;
+
+    let category = catFilter === 'any' ? pick(Object.keys(TYPES)) : catFilter;
+    const type = pick(TYPES[category]);
+    const feature = pick(FEATURES);
+    const twist = pick(TWISTS);
+
+    let difficulty;
+    if(diffFilter !== 'any'){
+      difficulty = diffFilter;
+    } else {
+      const r = Math.random();
+      difficulty = r < 0.4 ? 'beginner' : r < 0.75 ? 'intermediate' : 'advanced';
+    }
+
+    const codename = pick(ADJECTIVES) + pick(NOUNS);
+    const desc = `A ${type.toLowerCase()} with ${feature.toLowerCase()}, but ${twist}.`;
+
+    return { id: Date.now() + Math.random(), codename, type, feature, twist, category, difficulty, desc, saved:false };
+  }
+
+  function renderIdea(idea){
+    document.getElementById('emptyState').style.display = 'none';
+    const card = document.getElementById('ideaCard');
+    card.classList.add('show');
+
+    document.getElementById('typeBadge').textContent = idea.type;
+    const diffBadge = document.getElementById('diffBadge');
+    diffBadge.textContent = capitalize(idea.difficulty);
+    diffBadge.className = 'pill diff-' + idea.difficulty;
+
+    document.getElementById('ideaCodename').innerHTML = `Project <span>${idea.codename}</span>`;
+    document.getElementById('ideaDesc').textContent = idea.desc;
+    document.getElementById('featureVal').textContent = idea.feature;
+    document.getElementById('twistVal').textContent = capitalize(idea.twist);
+    document.getElementById('categoryVal').textContent = capitalize(idea.category);
+
+    const starBtn = document.getElementById('starBtn');
+    const isSaved = favorites.some(f => f.codename === idea.codename && f.desc === idea.desc);
+    starBtn.textContent = isSaved ? '★' : '☆';
+    starBtn.classList.toggle('saved', isSaved);
+  }
+
+  function capitalize(s){ return s.charAt(0).toUpperCase() + s.slice(1); }
+
+  function addToHistory(idea){
+    history.unshift(idea);
+    if(history.length > 30) history.pop();
+    saveJSON('cacig_history', history);
+    renderHistory();
+  }
+
+  function toggleFavorite(idea){
+    const idx = favorites.findIndex(f => f.codename === idea.codename && f.desc === idea.desc);
+    if(idx >= 0){
+      favorites.splice(idx,1);
+    } else {
+      favorites.unshift(idea);
+    }
+    saveJSON('cacig_favorites', favorites);
+    renderFavorites();
+    if(currentIdea) renderIdea(currentIdea);
+  }
+
+  function renderFavorites(){
+    const list = document.getElementById('favoritesList');
+    if(favorites.length === 0){
+      list.innerHTML = `<div class="empty-state" style="margin-bottom:0"><div class="icon">★</div><div>No favorites saved yet.</div></div>`;
+      return;
+    }
+    list.innerHTML = favorites.map(f => `
+      <div class="list-item">
+        <div class="li-main">
+          <div class="li-title">Project ${escapeHTML(f.codename)}</div>
+          <div class="li-meta">${escapeHTML(f.type)} · ${escapeHTML(capitalize(f.difficulty))}</div>
+        </div>
+        <div class="li-actions">
+          <button class="li-btn" data-remove-fav="${f.id}" title="Remove">✕</button>
+        </div>
+      </div>
+    `).join('');
+
+    list.querySelectorAll('[data-remove-fav]').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        const id = parseFloat(btn.dataset.removeFav);
+        favorites = favorites.filter(f => f.id !== id);
+        saveJSON('cacig_favorites', favorites);
+        renderFavorites();
+        if(currentIdea) renderIdea(currentIdea);
+      });
+    });
+  }
+
+  function renderHistory(){
+    const list = document.getElementById('historyList');
+    if(history.length === 0){
+      list.innerHTML = `<div class="empty-state" style="margin-bottom:0"><div class="icon">🕓</div><div>No history yet — generate some ideas.</div></div>`;
+      return;
+    }
+    list.innerHTML = history.map(h => `
+      <div class="list-item">
+        <div class="li-main">
+          <div class="li-title">Project ${escapeHTML(h.codename)}</div>
+          <div class="li-meta">${escapeHTML(h.type)} · ${escapeHTML(capitalize(h.difficulty))}</div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function escapeHTML(str){
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+  }
+
+  document.getElementById('generateBtn').addEventListener('click', ()=>{
+    currentIdea = generateIdea();
+    renderIdea(currentIdea);
+    addToHistory(currentIdea);
+  });
+
+  document.getElementById('starBtn').addEventListener('click', ()=>{
+    if(currentIdea) toggleFavorite(currentIdea);
+  });
+
+  document.querySelectorAll('.tab').forEach(tab=>{
+    tab.addEventListener('click', ()=>{
+      document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
+      tab.classList.add('active');
+      document.getElementById(tab.dataset.tab + 'Tab').classList.add('active');
+    });
+  });
+
+  document.getElementById('clearFavBtn').addEventListener('click', ()=>{
+    if(!confirm('Clear all favorites?')) return;
+    favorites = [];
+    saveJSON('cacig_favorites', favorites);
+    renderFavorites();
+    if(currentIdea) renderIdea(currentIdea);
+  });
+
+  document.getElementById('clearHistBtn').addEventListener('click', ()=>{
+    if(!confirm('Clear all history?')) return;
+    history = [];
+    saveJSON('cacig_history', history);
+    renderHistory();
+  });
+
+  renderFavorites();
+  renderHistory();
+})();
+</script>
+</body>
+</html>
