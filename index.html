@@ -1,4 +1,5 @@
-<!DOCTYPE html>
+Here's the updated homepage — swapped one of the "Coming Soon" slots for a live CACIG card.
+html<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -35,7 +36,6 @@
   .wrap{max-width:1100px;margin:0 auto;padding:0 28px}
   ::selection{background:var(--orange);color:#17130f}
 
-  /* NAV */
   nav{
     position:sticky;top:0;z-index:50;
     background:rgba(20,16,9,0.85);backdrop-filter:blur(10px);
@@ -48,7 +48,6 @@
   nav .links a{color:var(--muted);text-decoration:none;transition:color .2s;position:relative}
   nav .links a:hover{color:var(--orange)}
 
-  /* HERO */
   header{padding:110px 0 80px;text-align:center;position:relative}
   .cube{width:130px;height:130px;margin:0 auto 34px;filter:drop-shadow(0 18px 36px rgba(242,112,26,.35))}
   .eyebrow{
@@ -90,7 +89,6 @@
 
   section{padding:76px 0;border-top:1px solid var(--line-soft)}
 
-  /* TOOLS / APPS GRID */
   .tools-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:18px}
   .tool-card{
     position:relative;background:var(--panel);border:1px solid var(--line);border-radius:16px;
@@ -125,7 +123,6 @@
     color:var(--orange-soft);display:flex;align-items:center;gap:6px;z-index:1;
   }
 
-  /* WORK (project placeholder) */
   .empty-work{
     border:1px dashed var(--line);border-radius:16px;
     padding:60px 30px;text-align:center;color:var(--muted);
@@ -137,7 +134,6 @@
     color:var(--orange);text-transform:uppercase;margin-bottom:10px;
   }
 
-  /* ABOUT */
   .about-grid{display:grid;grid-template-columns:1.1fr 1fr;gap:50px;align-items:start}
   .about-grid h2{font-size:32px;letter-spacing:-.02em;line-height:1.25;font-weight:700}
   .about-grid h2 span{color:var(--orange)}
@@ -147,7 +143,6 @@
   .stat .num{font-size:26px;color:var(--orange-soft);font-weight:700}
   .stat .lbl{font-size:10.5px;letter-spacing:.15em;color:var(--muted);text-transform:uppercase}
 
-  /* CONTACT */
   .contact{text-align:center}
   .contact h2{font-size:clamp(30px,6vw,54px);letter-spacing:-.03em;margin-bottom:12px;font-weight:800}
   .contact a.mail{
@@ -193,7 +188,6 @@
 
 <div class="wrap">
 
-  <!-- HERO -->
   <header>
     <div class="eyebrow">Est. 2026</div>
     <svg class="cube" viewBox="0 0 100 100" aria-label="MakeForge cube">
@@ -230,19 +224,19 @@
         <span class="arrow">Open Tool →</span>
       </a>
 
+      <a href="cacig.html" class="tool-card">
+        <div class="tool-icon">⚡</div>
+        <span class="status live">● Live</span>
+        <h3>CACIG</h3>
+        <p>Custom App Creation Idea Generator — mixes types, features, and twists into a real project idea.</p>
+        <span class="arrow">Open Tool →</span>
+      </a>
+
       <div class="tool-card disabled">
         <div class="tool-icon">🧩</div>
         <span class="status soon">In the Forge</span>
         <h3>Next Build</h3>
         <p>Something new is being cooked up. Check back soon for the next MakeForge tool.</p>
-        <span class="arrow" style="color:var(--muted-dim)">Coming Soon</span>
-      </div>
-
-      <div class="tool-card disabled">
-        <div class="tool-icon">🛠️</div>
-        <span class="status soon">Planned</span>
-        <h3>Reserved Slot</h3>
-        <p>Room for whatever gets built next — apps, games, or utilities.</p>
         <span class="arrow" style="color:var(--muted-dim)">Coming Soon</span>
       </div>
 
@@ -270,7 +264,7 @@
         <p style="margin-bottom:16px">MakeForge is my studio for turning ideas into real, playable, usable things — from Minecraft mods and web games to browser tools and sites.</p>
         <p>No team, no red tape. Just build, ship, forge. If it's worth making, it gets made here.</p>
         <div class="stat-row">
-          <div class="stat"><div class="num">1</div><div class="lbl">Tools Shipped</div></div>
+          <div class="stat"><div class="num">2</div><div class="lbl">Tools Shipped</div></div>
           <div class="stat"><div class="num">2026</div><div class="lbl">Founded</div></div>
           <div class="stat"><div class="num">∞</div><div class="lbl">Ideas Queued</div></div>
         </div>
