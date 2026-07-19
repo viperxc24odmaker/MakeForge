@@ -7,7 +7,6 @@
 <style>
   :root{
     --bg:#141009;
-    --bg-alt:#1a140d;
     --panel:#1e170f;
     --panel-hover:#241b12;
     --line:#332a1f;
@@ -31,53 +30,124 @@
     font-family:var(--sans);
     line-height:1.6;
     -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
   }
   .wrap{max-width:1100px;margin:0 auto;padding:0 28px}
   ::selection{background:var(--orange);color:#17130f}
 
+  /* NAV */
   nav{
     position:sticky;top:0;z-index:50;
     background:rgba(20,16,9,0.85);backdrop-filter:blur(10px);
     display:flex;align-items:center;justify-content:space-between;
     padding:18px 0;border-bottom:1px solid var(--line-soft);
+    animation:navDrop .6s ease both;
   }
+  @keyframes navDrop{from{transform:translateY(-100%)}to{transform:translateY(0)}}
   nav .wrap{display:flex;align-items:center;justify-content:space-between;width:100%}
   .brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:19px;letter-spacing:-.02em}
+  .brand .mini-cube{width:22px;height:22px;position:relative;perspective:200px}
+  .brand .mini-cube .face{position:absolute;inset:0;animation:spinMini 6s linear infinite}
   nav .links{display:flex;gap:30px;font-family:var(--mono);font-size:11.5px;letter-spacing:.16em;text-transform:uppercase}
   nav .links a{color:var(--muted);text-decoration:none;transition:color .2s;position:relative}
+  nav .links a::after{
+    content:"";position:absolute;left:0;bottom:-4px;width:0;height:1px;background:var(--orange);
+    transition:width .25s ease;
+  }
   nav .links a:hover{color:var(--orange)}
+  nav .links a:hover::after{width:100%}
 
-  header{padding:110px 0 80px;text-align:center;position:relative}
-  .cube{width:130px;height:130px;margin:0 auto 34px;filter:drop-shadow(0 18px 36px rgba(242,112,26,.35))}
+  /* HERO */
+  header{padding:110px 0 90px;text-align:center;position:relative}
   .eyebrow{
     display:inline-flex;align-items:center;gap:8px;
     font-family:var(--mono);font-size:10.5px;letter-spacing:.22em;text-transform:uppercase;
     color:var(--orange-soft);background:rgba(242,112,26,0.08);border:1px solid rgba(242,112,26,0.25);
-    padding:6px 14px;border-radius:999px;margin-bottom:26px;
+    padding:6px 14px;border-radius:999px;margin-bottom:30px;
+    opacity:0;animation:fadeUp .6s ease .1s forwards;
   }
-  .eyebrow::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--orange);box-shadow:0 0 8px var(--orange)}
-  .wordmark{font-size:clamp(46px,9.5vw,90px);font-weight:800;letter-spacing:-.035em;line-height:1}
+  .eyebrow::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--orange);box-shadow:0 0 8px var(--orange);animation:pulse 2s ease infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+  /* 3D CUBE */
+  .cube-stage{
+    width:140px;height:140px;margin:0 auto 38px;perspective:700px;
+    opacity:0;animation:fadeUp .7s ease .2s forwards;
+  }
+  .cube3d{
+    width:100%;height:100%;position:relative;transform-style:preserve-3d;
+    animation:spinCube 9s linear infinite;
+    filter:drop-shadow(0 20px 34px rgba(242,112,26,.35));
+  }
+  @keyframes spinCube{
+    0%{transform:rotateX(-18deg) rotateY(0deg)}
+    100%{transform:rotateX(-18deg) rotateY(360deg)}
+  }
+  @keyframes spinMini{
+    0%{transform:rotateY(0deg)}
+    100%{transform:rotateY(360deg)}
+  }
+  .cube3d .face{
+    position:absolute;width:70px;height:70px;left:35px;top:35px;
+    border:1px solid rgba(0,0,0,0.25);
+  }
+  .face.front{background:linear-gradient(135deg,#ffa559,#e8590c);transform:translateZ(35px)}
+  .face.back{background:linear-gradient(135deg,#c9560f,#8c3a08);transform:rotateY(180deg) translateZ(35px)}
+  .face.right{background:linear-gradient(135deg,#2b231c,#1c1610);transform:rotateY(90deg) translateZ(35px)}
+  .face.left{background:linear-gradient(135deg,#241d15,#17120c);transform:rotateY(-90deg) translateZ(35px)}
+  .face.top{background:linear-gradient(135deg,#ffc27d,#ff9a4d);transform:rotateX(90deg) translateZ(35px)}
+  .face.bottom{background:linear-gradient(135deg,#1c1610,#100c08);transform:rotateX(-90deg) translateZ(35px)}
+
+  .wordmark{
+    font-size:clamp(46px,9.5vw,90px);font-weight:800;letter-spacing:-.035em;line-height:1;
+    opacity:0;animation:fadeUp .7s ease .3s forwards;
+  }
   .wordmark .make{color:var(--text)}
   .wordmark .forge{
     background:linear-gradient(135deg, var(--orange-soft), var(--orange-dim));
     -webkit-background-clip:text;background-clip:text;color:transparent;
+    background-size:200% 200%;
+    animation:gradientShift 5s ease infinite;
   }
+  @keyframes gradientShift{
+    0%,100%{background-position:0% 50%}
+    50%{background-position:100% 50%}
+  }
+  @keyframes fadeUp{
+    from{opacity:0;transform:translateY(16px)}
+    to{opacity:1;transform:translateY(0)}
+  }
+
   .tagline{
     font-family:var(--mono);font-size:13px;letter-spacing:.4em;
     color:var(--muted);margin-top:22px;text-transform:uppercase;
+    opacity:0;animation:fadeUp .7s ease .42s forwards;
   }
   .tagline b{color:var(--orange-soft);font-weight:400}
-  .intro{max-width:560px;margin:32px auto 0;color:var(--muted);font-size:17px}
-  .cta{display:flex;gap:14px;justify-content:center;margin-top:40px;flex-wrap:wrap}
+  .intro{
+    max-width:560px;margin:32px auto 0;color:var(--muted);font-size:17px;
+    opacity:0;animation:fadeUp .7s ease .52s forwards;
+  }
+  .cta{
+    display:flex;gap:14px;justify-content:center;margin-top:40px;flex-wrap:wrap;
+    opacity:0;animation:fadeUp .7s ease .62s forwards;
+  }
   .btn{
     font-family:var(--mono);font-size:12px;letter-spacing:.15em;text-transform:uppercase;
-    padding:14px 28px;border-radius:9px;text-decoration:none;transition:all .2s;border:1px solid transparent;
+    padding:14px 28px;border-radius:9px;text-decoration:none;transition:all .25s ease;border:1px solid transparent;
     display:inline-flex;align-items:center;gap:8px;
   }
-  .btn-primary{background:linear-gradient(135deg,var(--orange-soft),var(--orange-dim));color:#17130f;font-weight:700;box-shadow:0 8px 22px rgba(242,112,26,0.25)}
-  .btn-primary:hover{filter:brightness(1.08);transform:translateY(-1px)}
+  .btn-primary{
+    background:linear-gradient(135deg,var(--orange-soft),var(--orange-dim));color:#17130f;font-weight:700;
+    box-shadow:0 8px 22px rgba(242,112,26,0.25);
+  }
+  .btn-primary:hover{filter:brightness(1.1);transform:translateY(-2px);box-shadow:0 12px 28px rgba(242,112,26,0.35)}
   .btn-ghost{border-color:var(--line);color:var(--text)}
-  .btn-ghost:hover{border-color:var(--orange);color:var(--orange);background:rgba(242,112,26,0.06)}
+  .btn-ghost:hover{border-color:var(--orange);color:var(--orange);background:rgba(242,112,26,0.06);transform:translateY(-2px)}
+
+  /* SCROLL REVEAL */
+  .reveal{opacity:0;transform:translateY(28px);transition:opacity .7s ease, transform .7s ease}
+  .reveal.in-view{opacity:1;transform:translateY(0)}
 
   .label{
     font-family:var(--mono);font-size:11px;letter-spacing:.28em;color:var(--muted);
@@ -88,39 +158,43 @@
 
   section{padding:76px 0;border-top:1px solid var(--line-soft)}
 
+  /* TOOLS GRID */
   .tools-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:18px}
   .tool-card{
     position:relative;background:var(--panel);border:1px solid var(--line);border-radius:16px;
-    padding:26px;transition:transform .22s ease, border-color .22s ease, background .22s ease;
+    padding:26px;transition:transform .25s ease, border-color .25s ease, background .25s ease, box-shadow .25s ease;
     text-decoration:none;color:var(--text);display:flex;flex-direction:column;gap:14px;overflow:hidden;
   }
   .tool-card::before{
     content:"";position:absolute;inset:0;opacity:0;
-    background:radial-gradient(circle at 30% 0%, rgba(242,112,26,0.12), transparent 60%);
-    transition:opacity .25s;
+    background:radial-gradient(circle at 30% 0%, rgba(242,112,26,0.14), transparent 60%);
+    transition:opacity .3s;
   }
-  .tool-card:hover{transform:translateY(-5px);border-color:var(--orange-dim);background:var(--panel-hover)}
+  .tool-card:hover{
+    transform:translateY(-6px) scale(1.01);border-color:var(--orange-dim);background:var(--panel-hover);
+    box-shadow:0 16px 34px rgba(0,0,0,0.35);
+  }
   .tool-card:hover::before{opacity:1}
+  .tool-card:hover .tool-icon{transform:rotate(-6deg) scale(1.08)}
   .tool-card.disabled{opacity:.55;cursor:default}
-  .tool-card.disabled:hover{transform:none;border-color:var(--line)}
+  .tool-card.disabled:hover{transform:none;border-color:var(--line);box-shadow:none}
 
   .tool-icon{
     width:44px;height:44px;border-radius:11px;display:flex;align-items:center;justify-content:center;
     background:linear-gradient(135deg, rgba(242,112,26,0.18), rgba(242,112,26,0.05));
-    border:1px solid rgba(242,112,26,0.25);font-size:20px;z-index:1;
+    border:1px solid rgba(242,112,26,0.25);font-size:20px;z-index:1;transition:transform .3s ease;
   }
-  .tool-card .status{
-    font-family:var(--mono);font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;
-    z-index:1;
-  }
+  .tool-card .status{font-family:var(--mono);font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;z-index:1}
   .status.live{color:#4ade80}
+  .status.live::before{content:"● ";animation:pulse 2s ease infinite}
   .status.soon{color:var(--muted-dim)}
   .tool-card h3{font-size:19px;letter-spacing:-.01em;z-index:1}
   .tool-card p{color:var(--muted);font-size:14px;z-index:1}
   .tool-card .arrow{
     margin-top:auto;font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;
-    color:var(--orange-soft);display:flex;align-items:center;gap:6px;z-index:1;
+    color:var(--orange-soft);display:flex;align-items:center;gap:6px;z-index:1;transition:gap .25s ease;
   }
+  .tool-card:hover .arrow{gap:10px}
 
   .empty-work{
     border:1px dashed var(--line);border-radius:16px;
@@ -139,7 +213,7 @@
   .about-grid p{color:var(--muted);font-size:16px}
   .stat-row{display:flex;gap:34px;margin-top:28px;flex-wrap:wrap}
   .stat{font-family:var(--mono)}
-  .stat .num{font-size:26px;color:var(--orange-soft);font-weight:700}
+  .stat .num{font-size:26px;color:var(--orange-soft);font-weight:700;display:inline-block}
   .stat .lbl{font-size:10.5px;letter-spacing:.15em;color:var(--muted);text-transform:uppercase}
 
   .contact{text-align:center}
@@ -148,16 +222,20 @@
     color:var(--orange-soft);text-decoration:none;font-size:20px;
     border-bottom:1px solid var(--line);padding-bottom:3px;transition:.2s;
   }
-  .contact a.mail:hover{border-color:var(--orange)}
+  .contact a.mail:hover{border-color:var(--orange);letter-spacing:.02em}
   .socials{display:flex;gap:26px;justify-content:center;margin-top:28px;font-family:var(--mono);font-size:12px;letter-spacing:.15em;text-transform:uppercase}
   .socials a{color:var(--muted);text-decoration:none;transition:.2s}
-  .socials a:hover{color:var(--orange)}
+  .socials a:hover{color:var(--orange);transform:translateY(-2px);display:inline-block}
 
   footer{padding:36px 0;border-top:1px solid var(--line-soft);text-align:center;font-family:var(--mono);font-size:11px;letter-spacing:.2em;color:var(--muted-dim);text-transform:uppercase}
 
   @media(max-width:640px){
     .about-grid{grid-template-columns:1fr;gap:24px}
     nav .links{gap:18px;font-size:10px}
+  }
+
+  @media(prefers-reduced-motion:reduce){
+    *{animation:none!important;transition:none!important}
   }
 </style>
 </head>
@@ -166,20 +244,23 @@
 <nav>
   <div class="wrap">
     <div class="brand">
-      <svg width="28" height="28" viewBox="0 0 100 100" aria-hidden="true">
-        <defs><linearGradient id="t1" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stop-color="#ffa559"/><stop offset="1" stop-color="#e8590c"/>
-        </linearGradient></defs>
-        <polygon points="50,10 88,32 50,54 12,32" fill="url(#t1)"/>
-        <polygon points="12,32 50,54 50,92 12,70" fill="#2b231c"/>
-        <polygon points="88,32 50,54 50,92 88,70" fill="#1f1913"/>
-      </svg>
+      <div class="mini-cube">
+        <svg width="22" height="22" viewBox="0 0 100 100" class="face" aria-hidden="true">
+          <defs><linearGradient id="t1" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#ffa559"/><stop offset="1" stop-color="#e8590c"/>
+          </linearGradient></defs>
+          <polygon points="50,10 88,32 50,54 12,32" fill="url(#t1)"/>
+          <polygon points="12,32 50,54 50,92 12,70" fill="#2b231c"/>
+          <polygon points="88,32 50,54 50,92 88,70" fill="#1f1913"/>
+        </svg>
+      </div>
       <span>Make<span style="color:var(--orange)">Forge</span></span>
     </div>
     <div class="links">
       <a href="#tools">Tools</a>
       <a href="#work">Work</a>
       <a href="#about">About</a>
+      <a href="devlog.html">Devlog</a>
       <a href="#contact">Contact</a>
     </div>
   </div>
@@ -187,16 +268,20 @@
 
 <div class="wrap">
 
+  <!-- HERO -->
   <header>
     <div class="eyebrow">Est. 2026</div>
-    <svg class="cube" viewBox="0 0 100 100" aria-label="MakeForge cube">
-      <defs><linearGradient id="top" x1="0" y1="0" x2="1" y2="1">
-        <stop offset="0" stop-color="#ffa559"/><stop offset="1" stop-color="#e8590c"/>
-      </linearGradient></defs>
-      <polygon points="50,8 90,31 50,54 10,31" fill="url(#top)"/>
-      <polygon points="10,31 50,54 50,94 10,71" fill="#2b231c"/>
-      <polygon points="90,31 50,54 50,94 90,71" fill="#1c1610"/>
-    </svg>
+
+    <div class="cube-stage">
+      <div class="cube3d">
+        <div class="face front"></div>
+        <div class="face back"></div>
+        <div class="face right"></div>
+        <div class="face left"></div>
+        <div class="face top"></div>
+        <div class="face bottom"></div>
+      </div>
+    </div>
 
     <div class="wordmark"><span class="make">Make</span><span class="forge">Forge</span></div>
     <div class="tagline">Build <b>·</b> Ship <b>·</b> Forge</div>
@@ -210,14 +295,14 @@
   </header>
 
   <!-- TOOLS / APPS -->
-  <section id="tools">
+  <section id="tools" class="reveal">
     <div class="label">Built In-House</div>
     <h2 class="section-heading">Tools &amp; Apps</h2>
     <div class="tools-grid">
 
       <a href="pixel-studio.html" class="tool-card">
         <div class="tool-icon">🎨</div>
-        <span class="status live">● Live</span>
+        <span class="status live">Live</span>
         <h3>Pixel Studio</h3>
         <p>A full sprite &amp; animation editor — draw, animate, and export spritesheets straight from the browser.</p>
         <span class="arrow">Open Tool →</span>
@@ -225,7 +310,7 @@
 
       <a href="cacig.html" class="tool-card">
         <div class="tool-icon">⚡</div>
-        <span class="status live">● Live</span>
+        <span class="status live">Live</span>
         <h3>CACIG</h3>
         <p>Custom App Creation Idea Generator — mixes types, features, and twists into a real project idea.</p>
         <span class="arrow">Open Tool →</span>
@@ -243,7 +328,7 @@
   </section>
 
   <!-- WORK -->
-  <section id="work">
+  <section id="work" class="reveal">
     <div class="label">Selected Work</div>
     <h2 class="section-heading">Projects</h2>
     <div class="empty-work">
@@ -253,7 +338,7 @@
   </section>
 
   <!-- ABOUT -->
-  <section id="about">
+  <section id="about" class="reveal">
     <div class="about-grid">
       <div>
         <div class="label">About</div>
@@ -263,7 +348,7 @@
         <p style="margin-bottom:16px">MakeForge is my studio for turning ideas into real, playable, usable things — from Minecraft mods and web games to browser tools and sites.</p>
         <p>No team, no red tape. Just build, ship, forge. If it's worth making, it gets made here.</p>
         <div class="stat-row">
-          <div class="stat"><div class="num">2</div><div class="lbl">Tools Shipped</div></div>
+          <div class="stat"><div class="num" data-count="2">0</div><div class="lbl">Tools Shipped</div></div>
           <div class="stat"><div class="num">2026</div><div class="lbl">Founded</div></div>
           <div class="stat"><div class="num">∞</div><div class="lbl">Ideas Queued</div></div>
         </div>
@@ -272,7 +357,7 @@
   </section>
 
   <!-- CONTACT -->
-  <section id="contact" class="contact">
+  <section id="contact" class="contact reveal">
     <div class="label" style="justify-content:center">Let's Build</div>
     <h2>Got something to make?</h2>
     <p style="color:var(--muted);margin-bottom:22px">Open to collabs, commissions, and good ideas.</p>
@@ -287,5 +372,40 @@
   <footer>MakeForge © 2026 — Build · Ship · Forge</footer>
 
 </div>
+
+<script>
+(function(){
+  "use strict";
+  // Scroll-reveal for sections
+  const revealEls = document.querySelectorAll('.reveal');
+  if('IntersectionObserver' in window){
+    const observer = new IntersectionObserver((entries)=>{
+      entries.forEach(entry=>{
+        if(entry.isIntersecting){
+          entry.target.classList.add('in-view');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15 });
+    revealEls.forEach(el => observer.observe(el));
+  } else {
+    revealEls.forEach(el => el.classList.add('in-view'));
+  }
+
+  // Count-up animation for the "Tools Shipped" stat
+  const counter = document.querySelector('.num[data-count]');
+  if(counter){
+    const target = parseInt(counter.dataset.count, 10);
+    let current = 0;
+    const step = ()=>{
+      current++;
+      counter.textContent = current;
+      if(current < target) requestAnimationFrame(()=>setTimeout(step, 250));
+    };
+    setTimeout(step, 600);
+  }
+})();
+</script>
+
 </body>
 </html>
