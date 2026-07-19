@@ -41,13 +41,11 @@
     background:rgba(20,16,9,0.85);backdrop-filter:blur(10px);
     display:flex;align-items:center;justify-content:space-between;
     padding:18px 0;border-bottom:1px solid var(--line-soft);
-    animation:navDrop .6s ease both;
   }
-  @keyframes navDrop{from{transform:translateY(-100%)}to{transform:translateY(0)}}
   nav .wrap{display:flex;align-items:center;justify-content:space-between;width:100%}
   .brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:19px;letter-spacing:-.02em}
-  .brand .mini-cube{width:22px;height:22px;position:relative;perspective:200px}
-  .brand .mini-cube .face{position:absolute;inset:0;animation:spinMini 6s linear infinite}
+  .brand .mini-cube{width:22px;height:22px;position:relative}
+  .brand .mini-cube svg{animation:spinMini 6s linear infinite}
   nav .links{display:flex;gap:30px;font-family:var(--mono);font-size:11.5px;letter-spacing:.16em;text-transform:uppercase}
   nav .links a{color:var(--muted);text-decoration:none;transition:color .2s;position:relative}
   nav .links a::after{
@@ -64,7 +62,6 @@
     font-family:var(--mono);font-size:10.5px;letter-spacing:.22em;text-transform:uppercase;
     color:var(--orange-soft);background:rgba(242,112,26,0.08);border:1px solid rgba(242,112,26,0.25);
     padding:6px 14px;border-radius:999px;margin-bottom:30px;
-    opacity:0;animation:fadeUp .6s ease .1s forwards;
   }
   .eyebrow::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--orange);box-shadow:0 0 8px var(--orange);animation:pulse 2s ease infinite}
   @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
@@ -72,7 +69,6 @@
   /* 3D CUBE */
   .cube-stage{
     width:140px;height:140px;margin:0 auto 38px;perspective:700px;
-    opacity:0;animation:fadeUp .7s ease .2s forwards;
   }
   .cube3d{
     width:100%;height:100%;position:relative;transform-style:preserve-3d;
@@ -100,7 +96,6 @@
 
   .wordmark{
     font-size:clamp(46px,9.5vw,90px);font-weight:800;letter-spacing:-.035em;line-height:1;
-    opacity:0;animation:fadeUp .7s ease .3s forwards;
   }
   .wordmark .make{color:var(--text)}
   .wordmark .forge{
@@ -113,24 +108,17 @@
     0%,100%{background-position:0% 50%}
     50%{background-position:100% 50%}
   }
-  @keyframes fadeUp{
-    from{opacity:0;transform:translateY(16px)}
-    to{opacity:1;transform:translateY(0)}
-  }
 
   .tagline{
     font-family:var(--mono);font-size:13px;letter-spacing:.4em;
     color:var(--muted);margin-top:22px;text-transform:uppercase;
-    opacity:0;animation:fadeUp .7s ease .42s forwards;
   }
   .tagline b{color:var(--orange-soft);font-weight:400}
   .intro{
     max-width:560px;margin:32px auto 0;color:var(--muted);font-size:17px;
-    opacity:0;animation:fadeUp .7s ease .52s forwards;
   }
   .cta{
     display:flex;gap:14px;justify-content:center;margin-top:40px;flex-wrap:wrap;
-    opacity:0;animation:fadeUp .7s ease .62s forwards;
   }
   .btn{
     font-family:var(--mono);font-size:12px;letter-spacing:.15em;text-transform:uppercase;
@@ -145,8 +133,17 @@
   .btn-ghost{border-color:var(--line);color:var(--text)}
   .btn-ghost:hover{border-color:var(--orange);color:var(--orange);background:rgba(242,112,26,0.06);transform:translateY(-2px)}
 
+  /* Entrance animation - applied via JS class, safe fallback if JS fails = fully visible */
+  .fade-target{opacity:1;transform:translateY(0)}
+  .fade-target.fade-init{opacity:0;transform:translateY(16px)}
+  .fade-target.fade-in{
+    opacity:1;transform:translateY(0);
+    transition:opacity .7s ease, transform .7s ease;
+  }
+
   /* SCROLL REVEAL */
-  .reveal{opacity:0;transform:translateY(28px);transition:opacity .7s ease, transform .7s ease}
+  .reveal{opacity:1;transform:translateY(0);transition:opacity .7s ease, transform .7s ease}
+  .reveal.reveal-init{opacity:0;transform:translateY(28px)}
   .reveal.in-view{opacity:1;transform:translateY(0)}
 
   .label{
@@ -235,7 +232,9 @@
   }
 
   @media(prefers-reduced-motion:reduce){
-    *{animation:none!important;transition:none!important}
+    .cube3d, .wordmark .forge, .eyebrow::before, .status.live::before, .brand .mini-cube svg{
+      animation:none!important;
+    }
   }
 </style>
 </head>
@@ -245,7 +244,7 @@
   <div class="wrap">
     <div class="brand">
       <div class="mini-cube">
-        <svg width="22" height="22" viewBox="0 0 100 100" class="face" aria-hidden="true">
+        <svg width="22" height="22" viewBox="0 0 100 100" aria-hidden="true">
           <defs><linearGradient id="t1" x1="0" y1="0" x2="1" y2="1">
             <stop offset="0" stop-color="#ffa559"/><stop offset="1" stop-color="#e8590c"/>
           </linearGradient></defs>
@@ -270,9 +269,9 @@
 
   <!-- HERO -->
   <header>
-    <div class="eyebrow">Est. 2026</div>
+    <div class="eyebrow fade-target" data-delay="0">Est. 2026</div>
 
-    <div class="cube-stage">
+    <div class="cube-stage fade-target" data-delay="100">
       <div class="cube3d">
         <div class="face front"></div>
         <div class="face back"></div>
@@ -283,12 +282,12 @@
       </div>
     </div>
 
-    <div class="wordmark"><span class="make">Make</span><span class="forge">Forge</span></div>
-    <div class="tagline">Build <b>·</b> Ship <b>·</b> Forge</div>
+    <div class="wordmark fade-target" data-delay="200"><span class="make">Make</span><span class="forge">Forge</span></div>
+    <div class="tagline fade-target" data-delay="300">Build <b>·</b> Ship <b>·</b> Forge</div>
 
-    <p class="intro">A one-person studio building games, apps, and tools — anything worth making.</p>
+    <p class="intro fade-target" data-delay="400">A one-person studio building games, apps, and tools — anything worth making.</p>
 
-    <div class="cta">
+    <div class="cta fade-target" data-delay="500">
       <a href="#tools" class="btn btn-primary">Explore Tools</a>
       <a href="#contact" class="btn btn-ghost">Get in Touch</a>
     </div>
@@ -376,34 +375,63 @@
 <script>
 (function(){
   "use strict";
-  // Scroll-reveal for sections
-  const revealEls = document.querySelectorAll('.reveal');
-  if('IntersectionObserver' in window){
-    const observer = new IntersectionObserver((entries)=>{
-      entries.forEach(entry=>{
-        if(entry.isIntersecting){
-          entry.target.classList.add('in-view');
-          observer.unobserve(entry.target);
-        }
+
+  // Hero entrance: content is visible by default (safe), JS just adds a nice staggered fade-in on top.
+  try{
+    const fadeEls = document.querySelectorAll('.fade-target');
+    fadeEls.forEach(el=>{
+      el.classList.add('fade-init');
+    });
+    // next frame, trigger the transition in with stagger
+    requestAnimationFrame(()=>{
+      fadeEls.forEach(el=>{
+        const delay = parseInt(el.dataset.delay || "0", 10);
+        setTimeout(()=>{
+          el.classList.add('fade-in');
+          el.classList.remove('fade-init');
+        }, delay);
       });
-    }, { threshold: 0.15 });
-    revealEls.forEach(el => observer.observe(el));
-  } else {
-    revealEls.forEach(el => el.classList.add('in-view'));
+    });
+  }catch(e){
+    // if anything goes wrong, content is already visible by default (fade-target base = opacity:1)
+  }
+
+  // Scroll-reveal for sections
+  try{
+    const revealEls = document.querySelectorAll('.reveal');
+    revealEls.forEach(el=>el.classList.add('reveal-init'));
+    if('IntersectionObserver' in window){
+      const observer = new IntersectionObserver((entries)=>{
+        entries.forEach(entry=>{
+          if(entry.isIntersecting){
+            entry.target.classList.add('in-view');
+            entry.target.classList.remove('reveal-init');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.15 });
+      revealEls.forEach(el => observer.observe(el));
+    } else {
+      revealEls.forEach(el => el.classList.remove('reveal-init'));
+    }
+  }catch(e){
+    // fail safe: sections stay visible by default (.reveal base = opacity:1)
   }
 
   // Count-up animation for the "Tools Shipped" stat
-  const counter = document.querySelector('.num[data-count]');
-  if(counter){
-    const target = parseInt(counter.dataset.count, 10);
-    let current = 0;
-    const step = ()=>{
-      current++;
-      counter.textContent = current;
-      if(current < target) requestAnimationFrame(()=>setTimeout(step, 250));
-    };
-    setTimeout(step, 600);
-  }
+  try{
+    const counter = document.querySelector('.num[data-count]');
+    if(counter){
+      const target = parseInt(counter.dataset.count, 10);
+      let current = 0;
+      const step = ()=>{
+        current++;
+        counter.textContent = current;
+        if(current < target) requestAnimationFrame(()=>setTimeout(step, 250));
+      };
+      setTimeout(step, 600);
+    }
+  }catch(e){ /* non-critical, skip silently */ }
 })();
 </script>
 
