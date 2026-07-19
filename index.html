@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MakeForge — Build · Ship · Forge</title>
+<style>
+  :root{
+    --bg:#17130f;
+    --bg-soft:#221c16;
+    --card:#1e1813;
+    --line:#332a22;
+    --text:#f4efe9;
+    --muted:#9a8d80;
+    --orange:#f26a1b;
+    --orange-soft:#ff8a3d;
+    --mono:'SF Mono',ui-monospace,'Cascadia Code','Roboto Mono',Menlo,Consolas,monospace;
+    --sans:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:var(--sans);
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1080px;margin:0 auto;padding:0 28px}
+
+  /* NAV */
+  nav{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:22px 0;border-bottom:1px solid var(--line);
+  }
+  .brand{display:flex;align-items:center;gap:12px;font-weight:800;font-size:20px;letter-spacing:-.02em}
+  .brand .mono-tag{font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:.25em;font-weight:400}
+  nav .links{display:flex;gap:26px;font-family:var(--mono);font-size:12px;letter-spacing:.15em;text-transform:uppercase}
+  nav .links a{color:var(--muted);text-decoration:none;transition:color .2s}
+  nav .links a:hover{color:var(--orange)}
+
+  /* HERO */
+  header{padding:90px 0 70px;text-align:center}
+  .cube{width:118px;height:118px;margin:0 auto 30px;filter:drop-shadow(0 14px 30px rgba(242,106,27,.28))}
+  .wordmark{font-size:clamp(44px,9vw,84px);font-weight:800;letter-spacing:-.03em;line-height:1}
+  .wordmark .make{color:var(--text)}
+  .wordmark .forge{color:var(--orange)}
+  .tagline{
+    font-family:var(--mono);font-size:13px;letter-spacing:.42em;
+    color:var(--muted);margin-top:20px;text-transform:uppercase;
+  }
+  .tagline b{color:var(--orange-soft);font-weight:400}
+  .intro{max-width:540px;margin:34px auto 0;color:var(--muted);font-size:17px}
+  .cta{display:flex;gap:14px;justify-content:center;margin-top:38px;flex-wrap:wrap}
+  .btn{
+    font-family:var(--mono);font-size:12px;letter-spacing:.15em;text-transform:uppercase;
+    padding:13px 26px;border-radius:8px;text-decoration:none;transition:all .2s;border:1px solid transparent;
+  }
+  .btn-primary{background:var(--orange);color:#17130f;font-weight:600}
+  .btn-primary:hover{background:var(--orange-soft)}
+  .btn-ghost{border-color:var(--line);color:var(--text)}
+  .btn-ghost:hover{border-color:var(--orange);color:var(--orange)}
+
+  /* SECTION LABEL */
+  .label{font-family:var(--mono);font-size:11px;letter-spacing:.28em;color:var(--muted);text-transform:uppercase;margin-bottom:26px}
+
+  /* WORK */
+  section{padding:70px 0;border-top:1px solid var(--line)}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:18px}
+  .work-card{
+    background:var(--card);border:1px solid var(--line);border-radius:14px;padding:26px;
+    transition:transform .2s,border-color .2s;
+  }
+  .work-card:hover{transform:translateY(-4px);border-color:var(--orange)}
+  .work-card .tag{font-family:var(--mono);font-size:10px;letter-spacing:.2em;color:var(--orange);text-transform:uppercase}
+  .work-card h3{font-size:21px;margin:12px 0 8px;letter-spacing:-.01em}
+  .work-card p{color:var(--muted);font-size:14.5px}
+
+  /* ABOUT */
+  .about-grid{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start}
+  .about-grid h2{font-size:30px;letter-spacing:-.02em;line-height:1.25}
+  .about-grid h2 span{color:var(--orange)}
+  .about-grid p{color:var(--muted);font-size:16px}
+
+  /* CONTACT */
+  .contact{text-align:center}
+  .contact h2{font-size:clamp(30px,6vw,52px);letter-spacing:-.03em;margin-bottom:10px}
+  .contact a.mail{color:var(--orange);text-decoration:none;font-size:20px;border-bottom:1px solid var(--line);padding-bottom:2px}
+  .contact a.mail:hover{border-color:var(--orange)}
+  .socials{display:flex;gap:22px;justify-content:center;margin-top:26px;font-family:var(--mono);font-size:12px;letter-spacing:.15em;text-transform:uppercase}
+  .socials a{color:var(--muted);text-decoration:none}
+  .socials a:hover{color:var(--orange)}
+
+  footer{padding:34px 0;border-top:1px solid var(--line);text-align:center;font-family:var(--mono);font-size:11px;letter-spacing:.2em;color:var(--muted);text-transform:uppercase}
+
+  @media(max-width:640px){.about-grid{grid-template-columns:1fr;gap:20px}}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <nav>
+    <div class="brand">
+      <!-- monogram cube -->
+      <svg width="30" height="30" viewBox="0 0 100 100" aria-hidden="true">
+        <defs><linearGradient id="t1" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#ff9a4d"/><stop offset="1" stop-color="#e8590c"/>
+        </linearGradient></defs>
+        <polygon points="50,10 88,32 50,54 12,32" fill="url(#t1)"/>
+        <polygon points="12,32 50,54 50,92 12,70" fill="#2b231c"/>
+        <polygon points="88,32 50,54 50,92 88,70" fill="#1f1913"/>
+      </svg>
+      <span>Make<span style="color:var(--orange)">Forge</span></span>
+    </div>
+    <div class="links">
+      <a href="#work">Work</a>
+      <a href="#about">About</a>
+      <a href="#contact">Contact</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <header>
+    <svg class="cube" viewBox="0 0 100 100" aria-label="MakeForge cube">
+      <defs><linearGradient id="top" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#ffa559"/><stop offset="1" stop-color="#e8590c"/>
+      </linearGradient></defs>
+      <polygon points="50,8 90,31 50,54 10,31" fill="url(#top)"/>
+      <polygon points="10,31 50,54 50,94 10,71" fill="#2b231c"/>
+      <polygon points="90,31 50,54 50,94 90,71" fill="#1c1610"/>
+    </svg>
+
+    <div class="wordmark"><span class="make">Make</span><span class="forge">Forge</span></div>
+    <div class="tagline">Build <b>·</b> Ship <b>·</b> Forge</div>
+
+    <p class="intro">A one-person studio building games, apps, and websites — anything worth making.</p>
+
+    <div class="cta">
+      <a href="#work" class="btn btn-primary">See the Work</a>
+      <a href="#contact" class="btn btn-ghost">Get in Touch</a>
+    </div>
+  </header>
+
+  <!-- WORK -->
+  <section id="work">
+    <div class="label">// Selected Work</div>
+    <div class="grid">
+      <div class="work-card">
+        <div class="tag">Minecraft Mod</div>
+        <h3>Treacherous Vanilla</h3>
+        <p>A horror mod adding a befriendable bodyguard and a relentless stalking threat to survival.</p>
+      </div>
+      <div class="work-card">
+        <div class="tag">Minecraft Mod</div>
+        <h3>Iron Grasp</h3>
+        <p>A grappling-hook mod with three distinct hook types for movement and traversal.</p>
+      </div>
+      <div class="work-card">
+        <div class="tag">Web Game</div>
+        <h3>Parallax Platformer</h3>
+        <p>A side-scrolling platformer with real parallax and tileset art, all in one file.</p>
+      </div>
+      <div class="work-card">
+        <div class="tag">Game Assets</div>
+        <h3>PixelForge Studios</h3>
+        <p>Pixel art and sprite work for indie developers — the creative arm of MakeForge.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="about-grid">
+      <h2>I build things.<br>Then I <span>ship</span> them.</h2>
+      <div>
+        <p style="margin-bottom:16px">MakeForge is my studio for turning ideas into real, playable, usable things — from Minecraft mods and web games to apps and sites.</p>
+        <p>No team, no red tape. Just build, ship, forge. If it's worth making, it gets made here.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact" class="contact">
+    <div class="label" style="text-align:center">// Let's Build</div>
+    <h2>Got something to make?</h2>
+    <p style="color:var(--muted);margin-bottom:22px">Open to collabs, commissions, and good ideas.</p>
+    <a class="mail" href="mailto:hello@makeforge.studio">hello@makeforge.studio</a>
+    <div class="socials">
+      <a href="#">GitHub</a>
+      <a href="#">Twitter / X</a>
+      <a href="#">Discord</a>
+    </div>
+  </section>
+
+  <footer>MakeForge © 2026 — Build · Ship · Forge</footer>
+
+</div>
+</body>
+</html>
