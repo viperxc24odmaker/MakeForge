@@ -77,4 +77,94 @@
   .about-grid p{color:var(--muted);font-size:16px}
 
   .contact{text-align:center}
-  .contact
+  .contact h2{font-size:clamp(30px,6vw,52px);letter-spacing:-.03em;margin-bottom:10px}
+  .contact a.mail{color:var(--orange);text-decoration:none;font-size:20px;border-bottom:1px solid var(--line);padding-bottom:2px}
+  .contact a.mail:hover{border-color:var(--orange)}
+  .socials{display:flex;gap:22px;justify-content:center;margin-top:26px;font-family:var(--mono);font-size:12px;letter-spacing:.15em;text-transform:uppercase}
+  .socials a{color:var(--muted);text-decoration:none}
+  .socials a:hover{color:var(--orange)}
+
+  footer{padding:34px 0;border-top:1px solid var(--line);text-align:center;font-family:var(--mono);font-size:11px;letter-spacing:.2em;color:var(--muted);text-transform:uppercase}
+
+  @media(max-width:640px){.about-grid{grid-template-columns:1fr;gap:20px}}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <nav>
+    <div class="brand">
+      <svg width="30" height="30" viewBox="0 0 100 100" aria-hidden="true">
+        <defs><linearGradient id="t1" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#ff9a4d"/><stop offset="1" stop-color="#e8590c"/>
+        </linearGradient></defs>
+        <polygon points="50,10 88,32 50,54 12,32" fill="url(#t1)"/>
+        <polygon points="12,32 50,54 50,92 12,70" fill="#2b231c"/>
+        <polygon points="88,32 50,54 50,92 88,70" fill="#1f1913"/>
+      </svg>
+      <span>Make<span style="color:var(--orange)">Forge</span></span>
+    </div>
+    <div class="links">
+      <a href="#work">Work</a>
+      <a href="#about">About</a>
+      <a href="#contact">Contact</a>
+    </div>
+  </nav>
+
+  <header>
+    <svg class="cube" viewBox="0 0 100 100" aria-label="MakeForge cube">
+      <defs><linearGradient id="top" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#ffa559"/><stop offset="1" stop-color="#e8590c"/>
+      </linearGradient></defs>
+      <polygon points="50,8 90,31 50,54 10,31" fill="url(#top)"/>
+      <polygon points="10,31 50,54 50,94 10,71" fill="#2b231c"/>
+      <polygon points="90,31 50,54 50,94 90,71" fill="#1c1610"/>
+    </svg>
+
+    <div class="wordmark"><span class="make">Make</span><span class="forge">Forge</span></div>
+    <div class="tagline">Build <b>·</b> Ship <b>·</b> Forge</div>
+
+    <p class="intro">A one-person studio building games, apps, and websites — anything worth making.</p>
+
+    <div class="cta">
+      <a href="#work" class="btn btn-primary">See the Work</a>
+      <a href="#contact" class="btn btn-ghost">Get in Touch</a>
+    </div>
+  </header>
+
+  <section id="work">
+    <div class="label">// Selected Work</div>
+    <div class="empty-work">
+      <div class="soon">Coming Soon</div>
+      <p>First projects are in the forge right now. Check back shortly.</p>
+    </div>
+  </section>
+
+  <section id="about">
+    <div class="about-grid">
+      <h2>I build things.<br>Then I <span>ship</span> them.</h2>
+      <div>
+        <p style="margin-bottom:16px">MakeForge is my studio for turning ideas into real, playable, usable things — from Minecraft mods and web games to apps and sites.</p>
+        <p>No team, no red tape. Just build, ship, forge. If it's worth making, it gets made here.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact" class="contact">
+    <div class="label" style="text-align:center">// Let's Build</div>
+    <h2>Got something to make?</h2>
+    <p style="color:var(--muted);margin-bottom:22px">Open to collabs, commissions, and good ideas.</p>
+    <a class="mail" href="mailto:hello@makeforge.studio">hello@makeforge.studio</a>
+    <div class="socials">
+      <a href="#">GitHub</a>
+      <a href="#">Twitter / X</a>
+      <a href="#">Discord</a>
+    </div>
+  </section>
+
+  <footer>MakeForge © 2026 — Build · Ship · Forge</footer>
+
+</div>
+</body>
+</html>
