@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HTML Tester — MakeForge</title>
+<script>
+  (function(){
+    try{
+      var saved = localStorage.getItem('makeforge-theme');
+      document.documentElement.setAttribute('data-theme', saved || 'dark');
+    }catch(e){
+      document.documentElement.setAttribute('data-theme', 'dark');
+    }
+  })();
+</script>
+<style>
+  html[data-theme="dark"]{
+    --bg:#141009; --panel:#1e170f; --panel-alt:#241b12; --line:#332a1f;
+    --text:#f6f1ea; --muted:#9c8f7d; --muted-dim:#6f6455;
+    --orange:#f2701a; --orange-soft:#ff9248; --orange-dim:#c9560f;
+    --pink:#f472b6; --editor-bg:#141009; --live-dot:#4ade80;
+    --badge-bg:rgba(242,112,26,0.1); --badge-border:rgba(242,112,26,0.25);
+    --grain-opacity:0.05;
+  }
+  html[data-theme="light"]{
+    --bg:#faf5ee; --panel:#ffffff; --panel-alt:#fff5ea; --line:#ecdfcd;
+    --text:#241b10; --muted:#8c7a63; --muted-dim:#b7a98f;
+    --orange:#f2701a; --orange-soft:#ff8a3d; --orange-dim:#d35c0f;
+    --pink:#db2777; --editor-bg:#fffdfa; --live-dot:#16a34a;
+    --badge-bg:#fff0dc; --badge-border:#ffcf9e;
+    --grain-opacity:0.03;
+  }
+  :root{
+    --mono:'SF Mono',ui-monospace,'Cascadia Code',Menlo,Consolas,monospace;
+    --sans:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:var(--sans);min-height:100vh;position:relative}
+  body::before{
+    content:"";position:fixed;inset:0;pointer-events:none;z-index:9999;
+    opacity:var(--grain-opacity);mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  ::-webkit-scrollbar{width:11px;height:11px}
+  ::-webkit-scrollbar-track{background:var(--bg)}
+  ::-webkit-scrollbar-thumb{background:var(--line);border-radius:10px;border:2px solid var(--bg)}
+  ::-webkit-scrollbar-thumb:hover{background:var(--orange-dim)}
+
+  .topbar{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:14px 28px;border-bottom:1px solid var(--line);
+    background:var(--panel);position:sticky;top:0;z-index:10;
+  }
+  .back-link{
+    font-family:var(--mono);font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--muted);text-decoration:none;display:flex;align-items:center;gap:9px;transition:.2s;
+  }
+  .back-link:hover{color:var(--orange-dim)}
+  .back-link .logo-cube{width:24px;height:24px;transition:transform .3s ease}
+  .back-link:hover .logo-cube{transform:rotate(-10deg)}
+  .title-block{display:flex;align-items:center;gap:10px}
+  .title-block h1{font-size:16px;font-weight:800;letter-spacing:-.01em;margin:0}
+  .title-block h1 span{color:var(--orange)}
+  .title-block .badge{
+    font-family:var(--mono);font-size:9px;letter-spacing:.15em;text-transform:uppercase;
+    color:var(--orange-dim);background:var(--badge-bg);border:1px solid var(--badge-border);
+    padding:3px 9px;border-radius:999px;
+  }
+
+  .toolbar-actions{display:flex;gap:8px;align-items:center}
+  .tb-btn{
+    font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;
+    background:var(--panel-alt);border:1px solid var(--line);color:var(--text);
+    padding:8px 14px;border-radius:9px;cursor:pointer;transition:.15s;
+  }
+  .tb-btn:hover{border-color:var(--orange-soft)}
+  .tb-btn.primary{background:linear-gradient(135deg,var(--orange),var(--orange-dim));color:#fff;font-weight:700;border-color:transparent}
+  .tb-btn.primary:hover{filter:brightness(1.06)}
+  .theme-toggle{
+    background:var(--panel-alt);border:1px solid var(--line);color:var(--text);
+    width:36px;height:36px;border-radius:9px;cursor:pointer;font-size:15px;
+    display:flex;align-items:center;justify-content:center;transition:.2s;
+  }
+  .theme-toggle:hover{border-color:var(--orange);transform:rotate(15deg)}
+
+  .layout{display:grid;grid-template-columns:1fr 1fr;height:calc(100vh - 65px)}
+  .editor-side{display:flex;flex-direction:column;border-right:1px solid var(--line)}
+  .tabs{display:flex;border-bottom:1px solid var(--line);background:var(--panel)}
+  .tab-btn{
+    font-family:var(--mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;
+    background:none;border:none;color:var(--muted);padding:13px 22px;cursor:pointer;
+    border-bottom:2px solid transparent;transition:.15s;
+  }
+  .tab-btn.active{color:var(--orange-dim);border-color:var(--orange);background:var(--panel-alt)}
+  .tab-btn .dot{display:inline-block;width:6px;height:6px;border-radius:50%;margin-right:7px}
+  .tab-btn[data-lang="html"] .dot{background:#e8590c}
+  .tab-btn[data-lang="css"] .dot{background:#2563eb}
+  .tab-btn[data-lang="js"] .dot{background:#ca8a04}
+
+  .editor-panels{flex:1;position:relative}
+  textarea{
+    display:none;width:100%;height:100%;resize:none;border:none;outline:none;
+    background:var(--editor-bg);color:var(--text);font-family:var(--mono);font-size:13.5px;line-height:1.6;
+    padding:18px;tab-size:2;
+  }
+  textarea.active{display:block}
+  textarea::placeholder{color:var(--muted-dim)}
+
+  .preview-side{display:flex;flex-direction:column;background:var(--panel)}
+  .preview-topbar{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:10px 16px;border-bottom:1px solid var(--line);background:var(--panel-alt);
+  }
+  .preview-label{font-family:var(--mono);font-size:10.5px;letter-spacing:.15em;color:var(--muted);text-transform:uppercase;display:flex;align-items:center;gap:8px}
+  .live-dot{width:7px;height:7px;border-radius:50%;background:var(--live-dot);box-shadow:0 0 6px var(--live-dot)}
+  #previewFrame{flex:1;width:100%;border:none;background:#fff}
+
+  .status-bar{
+    padding:7px 16px;font-family:var(--mono);font-size:10.5px;color:var(--muted-dim);
+    border-top:1px solid var(--line);background:var(--panel-alt);letter-spacing:.05em;
+  }
+
+  @media(max-width:800px){
+    .layout{grid-template-columns:1fr;grid-template-rows:1fr 1fr;height:auto}
+    .editor-side{border-right:none;border-bottom:1px solid var(--line)}
+    #previewFrame{height:340px}
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a href="index.html" class="back-link">
+    <div class="logo-cube">
+      <svg width="24" height="24" viewBox="0 0 100 100" aria-hidden="true">
+        <defs><linearGradient id="t1" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#ffb676"/><stop offset="1" stop-color="#e8590c"/>
+        </linearGradient></defs>
+        <polygon points="50,10 88,32 50,54 12,32" fill="url(#t1)"/>
+        <polygon points="12,32 50,54 50,92 12,70" fill="#ffdcb8"/>
+        <polygon points="88,32 50,54 50,92 88,70" fill="#ffcf9e"/>
+      </svg>
+    </div>
+    MakeForge
+  </a>
+  <div class="title-block">
+    <h1>HTML <span>Tester</span></h1>
+    <span class="badge">v1.0</span>
+  </div>
+  <div class="toolbar-actions">
+    <button class="tb-btn" id="clearBtn">🗑 Clear</button>
+    <button class="tb-btn" id="downloadBtn">⬇ Download</button>
+    <button class="tb-btn primary" id="runBtn">▶ Run</button>
+    <button class="theme-toggle" id="themeToggle" title="Toggle light/dark" aria-label="Toggle theme">🌙</button>
+  </div>
+</div>
+
+<div class="layout">
+
+  <div class="editor-side">
+    <div class="tabs">
+      <button class="tab-btn active" data-lang="html"><span class="dot"></span>HTML</button>
+      <button class="tab-btn" data-lang="css"><span class="dot"></span>CSS</button>
+      <button class="tab-btn" data-lang="js"><span class="dot"></span>JS</button>
+    </div>
+    <div class="editor-panels">
+      <textarea id="htmlInput" class="active" spellcheck="false" placeholder="<h1>Hello MakeForge</h1>"></textarea>
+      <textarea id="cssInput" spellcheck="false" placeholder="body { font-family: sans-serif; }"></textarea>
+      <textarea id="jsInput" spellcheck="false" placeholder="console.log('hello');"></textarea>
+    </div>
+  </div>
+
+  <div class="preview-side">
+    <div class="preview-topbar">
+      <span class="preview-label"><span class="live-dot"></span>Live Preview</span>
+    </div>
+    <iframe id="previewFrame" sandbox="allow-scripts allow-modals"></iframe>
+    <div class="status-bar" id="statusBar">Ready — auto-updates as you type.</div>
+  </div>
+
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  function updateToggleIcon(){
+    var theme = document.documentElement.getAttribute('data-theme');
+    var btn = document.getElementById('themeToggle');
+    if(btn) btn.textContent = theme === 'dark' ? '☀️' : '🌙';
+  }
+  var toggleBtn = document.getElementById('themeToggle');
+  if(toggleBtn){
+    toggleBtn.addEventListener('click', function(){
+      var current = document.documentElement.getAttribute('data-theme');
+      var next = current === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', next);
+      try{ localStorage.setItem('makeforge-theme', next); }catch(e){}
+      updateToggleIcon();
+    });
+  }
+  updateToggleIcon();
+
+  const htmlInput = document.getElementById('htmlInput');
+  const cssInput = document.getElementById('cssInput');
+  const jsInput = document.getElementById('jsInput');
+  const frame = document.getElementById('previewFrame');
+  const statusBar = document.getElementById('statusBar');
+
+  htmlInput.value = `<h1>Hello MakeForge</h1>
+<p>Edit the HTML, CSS, and JS tabs — the preview updates live.</p>
+<button id="demoBtn">Click me</button>`;
+
+  cssInput.value = `body{
+  font-family: -apple-system, sans-serif;
+  padding: 24px;
+  color: #222;
+}
+button{
+  padding: 10px 18px;
+  border-radius: 8px;
+  border: none;
+  background: #f2701a;
+  color: white;
+  font-weight: 700;
+  cursor: pointer;
+}`;
+
+  jsInput.value = `document.getElementById('demoBtn').addEventListener('click', () => {
+  alert('MakeForge Tester works!');
+});`;
+
+  function buildDoc(){
+    const html = htmlInput.value;
+    const css = cssInput.value;
+    const js = jsInput.value;
+    return `<!DOCTYPE html><html><head><style>${css}</style></head><body>${html}<script>
+      window.onerror = function(msg){
+        parent.postMessage({ makeforgeError: String(msg) }, "*");
+        return false;
+      };
+      try{
+        ${js}
+      }catch(e){
+        parent.postMessage({ makeforgeError: e.message }, "*");
+      }
+    <\/script></body></html>`;
+  }
+
+  let debounceTimer = null;
+  function runPreview(){
+    statusBar.style.color = '';
+    frame.srcdoc = buildDoc();
+    statusBar.textContent = "Updated " + new Date().toLocaleTimeString();
+  }
+
+  function scheduleRun(){
+    clearTimeout(debounceTimer);
+    statusBar.textContent = "Typing...";
+    debounceTimer = setTimeout(runPreview, 600);
+  }
+
+  [htmlInput, cssInput, jsInput].forEach(el=>{
+    el.addEventListener('input', scheduleRun);
+  });
+
+  document.getElementById('runBtn').addEventListener('click', runPreview);
+
+  document.getElementById('clearBtn').addEventListener('click', ()=>{
+    if(!confirm('Clear all HTML, CSS, and JS?')) return;
+    htmlInput.value = '';
+    cssInput.value = '';
+    jsInput.value = '';
+    runPreview();
+  });
+
+  document.getElementById('downloadBtn').addEventListener('click', ()=>{
+    const doc = buildDoc();
+    const blob = new Blob([doc], { type: 'text/html' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'makeforge-test.html';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  });
+
+  document.querySelectorAll('.tab-btn').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+      document.querySelectorAll('textarea').forEach(t=>t.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById(btn.dataset.lang + 'Input').classList.add('active');
+    });
+  });
+
+  window.addEventListener('message', (e)=>{
+    if(e.data && e.data.makeforgeError){
+      statusBar.textContent = "⚠ JS Error: " + e.data.makeforgeError;
+      statusBar.style.color = 'var(--pink)';
+    }
+  });
+
+  runPreview();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Arcane — MakeForge</title>
+<script>
+  (function(){
+    try{
+      var saved = localStorage.getItem('makeforge-theme');
+      document.documentElement.setAttribute('data-theme', saved || 'dark');
+    }catch(e){
+      document.documentElement.setAttribute('data-theme', 'dark');
+    }
+  })();
+</script>
+<style>
+  html[data-theme="dark"]{
+    --bg:#141009; --panel:#1e170f; --panel-alt:#241b12; --line:#332a1f;
+    --text:#f6f1ea; --muted:#9c8f7d; --muted-dim:#6f6455;
+    --orange:#f2701a; --orange-soft:#ff9248; --orange-dim:#c9560f;
+    --purple:#a78bfa; --purple-dim:#7c5cd6;
+    --shadow-sm:0 4px 14px rgba(0,0,0,0.25);
+    --shadow-md:0 14px 34px rgba(0,0,0,0.3);
+    --badge-bg:rgba(242,112,26,0.1); --badge-border:rgba(242,112,26,0.25);
+    --purple-bg:rgba(167,139,250,0.1); --purple-border:rgba(167,139,250,0.25);
+    --grain-opacity:0.05;
+  }
+  html[data-theme="light"]{
+    --bg:#faf5ee; --panel:#ffffff; --panel-alt:#fff5ea; --line:#ecdfcd;
+    --text:#241b10; --muted:#8c7a63; --muted-dim:#b7a98f;
+    --orange:#f2701a; --orange-soft:#ff8a3d; --orange-dim:#d35c0f;
+    --purple:#7c3aed; --purple-dim:#6d28d9;
+    --shadow-sm:0 4px 14px rgba(60,42,18,0.06);
+    --shadow-md:0 14px 34px rgba(60,42,18,0.10);
+    --badge-bg:#fff0dc; --badge-border:#ffcf9e;
+    --purple-bg:#f3ebff; --purple-border:#ddc8fb;
+    --grain-opacity:0.03;
+  }
+  :root{
+    --mono:'SF Mono',ui-monospace,'Cascadia Code',Menlo,Consolas,monospace;
+    --sans:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{
+    background:var(--bg);color:var(--text);font-family:var(--sans);min-height:100vh;line-height:1.6;
+    transition:background-color .3s ease, color .3s ease;position:relative;
+  }
+  body::before{
+    content:"";position:fixed;inset:0;pointer-events:none;z-index:9999;
+    opacity:var(--grain-opacity);mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  ::-webkit-scrollbar{width:11px;height:11px}
+  ::-webkit-scrollbar-track{background:var(--bg)}
+  ::-webkit-scrollbar-thumb{background:var(--line);border-radius:10px;border:2px solid var(--bg)}
+  ::-webkit-scrollbar-thumb:hover{background:var(--orange-dim)}
+
+  .topbar{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:14px 28px;border-bottom:1px solid var(--line);
+    background:var(--panel);position:sticky;top:0;z-index:10;
+  }
+  .back-link{
+    font-family:var(--mono);font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--muted);text-decoration:none;display:flex;align-items:center;gap:9px;transition:.2s;
+  }
+  .back-link:hover{color:var(--orange-dim)}
+  .back-link .logo-cube{width:24px;height:24px;transition:transform .3s ease}
+  .back-link:hover .logo-cube{transform:rotate(-10deg)}
+  .title-block{display:flex;align-items:center;gap:10px}
+  .title-block h1{font-size:16px;font-weight:800;letter-spacing:-.01em;margin:0}
+  .title-block h1 span{color:var(--purple)}
+  .theme-toggle{
+    background:var(--panel-alt);border:1px solid var(--line);color:var(--text);
+    width:36px;height:36px;border-radius:10px;cursor:pointer;font-size:15px;
+    display:flex;align-items:center;justify-content:center;transition:.2s;
+  }
+  .theme-toggle:hover{border-color:var(--orange);transform:rotate(15deg)}
+
+  .wrap{max-width:920px;margin:0 auto;padding:0 28px}
+
+  header{padding:80px 0 56px;text-align:center}
+  .mod-icon{
+    width:96px;height:96px;margin:0 auto 28px;border-radius:24px;
+    background:linear-gradient(135deg,var(--purple),var(--purple-dim));
+    display:flex;align-items:center;justify-content:center;font-size:44px;
+    box-shadow:0 18px 40px rgba(124,58,237,0.35);transform:rotate(-3deg);
+  }
+  h1.mod-title{font-size:clamp(38px,7vw,60px);font-weight:800;letter-spacing:-.03em}
+  .mod-tagline{color:var(--muted);font-size:17px;max-width:520px;margin:16px auto 0}
+
+  .badges{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:26px}
+  .badge{
+    font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;
+    padding:7px 14px;border-radius:999px;color:var(--orange-dim);background:var(--badge-bg);
+    border:1px solid var(--badge-border);
+  }
+  .badge.purple{color:var(--purple);background:var(--purple-bg);border-color:var(--purple-border)}
+
+  .cta-row{display:flex;gap:14px;justify-content:center;margin-top:34px;flex-wrap:wrap}
+  .btn{
+    font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;
+    padding:13px 26px;border-radius:10px;text-decoration:none;transition:.2s;border:1px solid transparent;
+    display:inline-flex;align-items:center;gap:8px;
+  }
+  .btn-primary{
+    background:linear-gradient(135deg,var(--purple),var(--purple-dim));color:#fff;font-weight:700;
+    box-shadow:0 10px 24px rgba(124,58,237,0.3);
+  }
+  .btn-primary:hover{filter:brightness(1.08);transform:translateY(-2px) rotate(-0.5deg)}
+  .btn-ghost{border-color:var(--line);color:var(--text)}
+  .btn-ghost:hover{border-color:var(--orange);color:var(--orange-dim)}
+
+  section{padding:56px 0;border-top:1px solid var(--line)}
+  .label{
+    font-family:var(--mono);font-size:11px;letter-spacing:.26em;color:var(--muted);
+    text-transform:uppercase;margin-bottom:22px;display:flex;align-items:center;gap:10px;
+  }
+  .label::after{content:"";flex:1;height:1px;background:var(--line)}
+
+  .feature-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px}
+  .feature-card{
+    background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px;
+    box-shadow:var(--shadow-sm);transition:transform .2s ease, border-color .2s ease;
+  }
+  .feature-card:nth-child(odd){transform:rotate(-0.6deg)}
+  .feature-card:nth-child(even){transform:rotate(0.6deg)}
+  .feature-card:hover{transform:translateY(-4px) rotate(0deg);border-color:var(--purple-border)}
+  .feature-card .fi{font-size:26px;margin-bottom:12px}
+  .feature-card h3{font-size:16.5px;margin-bottom:8px}
+  .feature-card p{color:var(--muted);font-size:13.5px}
+
+  .stats-row{display:flex;gap:40px;flex-wrap:wrap;justify-content:center;text-align:center}
+  .stat{font-family:var(--mono)}
+  .stat .num{font-size:32px;font-weight:800;color:var(--purple)}
+  .stat .lbl{font-size:10.5px;letter-spacing:.15em;color:var(--muted);text-transform:uppercase;margin-top:4px}
+
+  .status-note{
+    text-align:center;color:var(--muted);font-size:14px;background:var(--panel-alt);
+    border:1px dashed var(--line);border-radius:14px;padding:20px;
+  }
+  .status-note b{color:var(--orange-dim)}
+
+  footer{padding:36px 0;border-top:1px solid var(--line);text-align:center;font-family:var(--mono);font-size:11px;letter-spacing:.2em;color:var(--muted-dim);text-transform:uppercase}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a href="index.html" class="back-link">
+    <div class="logo-cube">
+      <svg width="24" height="24" viewBox="0 0 100 100" aria-hidden="true">
+        <defs><linearGradient id="t1" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#ffb676"/><stop offset="1" stop-color="#e8590c"/>
+        </linearGradient></defs>
+        <polygon points="50,10 88,32 50,54 12,32" fill="url(#t1)"/>
+        <polygon points="12,32 50,54 50,92 12,70" fill="#ffdcb8"/>
+        <polygon points="88,32 50,54 50,92 88,70" fill="#ffcf9e"/>
+      </svg>
+    </div>
+    MakeForge
+  </a>
+  <div class="title-block"><h1>Project: <span>Arcane</span></h1></div>
+  <button class="theme-toggle" id="themeToggle" title="Toggle light/dark" aria-label="Toggle theme">🌙</button>
+</div>
+
+<div class="wrap">
+
+  <header>
+    <div class="mod-icon">🔮</div>
+    <h1 class="mod-title">Arcane</h1>
+    <p class="mod-tagline">A magic mod for Minecraft Fabric — twelve spells, a full mana system, and three bosses roaming the world.</p>
+
+    <div class="badges">
+      <span class="badge purple">Fabric 1.21.4</span>
+      <span class="badge">Yarn 1.21.4</span>
+      <span class="badge">In Development</span>
+    </div>
+
+    <div class="cta-row">
+      <a href="#" class="btn btn-primary">⬇ Coming to GitHub</a>
+      <a href="index.html#work" class="btn btn-ghost">← Back to MakeForge</a>
+    </div>
+  </header>
+
+  <section>
+    <div class="label">By the Numbers</div>
+    <div class="stats-row">
+      <div class="stat"><div class="num">12</div><div class="lbl">Spells</div></div>
+      <div class="stat"><div class="num">3</div><div class="lbl">Roaming Bosses</div></div>
+      <div class="stat"><div class="num">1</div><div class="lbl">Mana System</div></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="label">Core Features</div>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <div class="fi">✨</div>
+        <h3>12 Unique Spells</h3>
+        <p>A full spellbook of offensive, defensive, and utility magic to master.</p>
+      </div>
+      <div class="feature-card">
+        <div class="fi">🔷</div>
+        <h3>Mana System</h3>
+        <p>Every spell draws from a real resource — manage it or run dry mid-fight.</p>
+      </div>
+      <div class="feature-card">
+        <div class="fi">👹</div>
+        <h3>3 Roaming Bosses</h3>
+        <p>Dangerous, mobile bosses that hunt the world instead of waiting in a room.</p>
+      </div>
+      <div class="feature-card">
+        <div class="fi">⚙️</div>
+        <h3>Built on Fabric</h3>
+        <p>Runs on Fabric Loader with Fabric API — lightweight and mod-compatible.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="label">Status</div>
+    <div class="status-note">
+      Arcane is currently <b>in active development</b> under MakeForge. Spell balancing, boss AI, and mana tuning are being refined before the first public release. Follow the <a href="devlog.html" style="color:var(--orange-dim)">Devlog</a> for progress.
+    </div>
+  </section>
+
+</div>
+
+<footer>MakeForge © 2026 — Build · Ship · Forge</footer>
+
+<script>
+(function(){
+  "use strict";
+  function updateToggleIcon(){
+    var theme = document.documentElement.getAttribute('data-theme');
+    var btn = document.getElementById('themeToggle');
+    if(btn) btn.textContent = theme === 'dark' ? '☀️' : '🌙';
+  }
+  var toggleBtn = document.getElementById('themeToggle');
+  if(toggleBtn){
+    toggleBtn.addEventListener('click', function(){
+      var current = document.documentElement.getAttribute('data-theme');
+      var next = current === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', next);
+      try{ localStorage.setItem('makeforge-theme', next); }catch(e){}
+      updateToggleIcon();
+    });
+  }
+  updateToggleIcon();
+})();
+</script>
+</body>
+</html>
