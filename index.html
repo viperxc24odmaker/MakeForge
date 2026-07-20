@@ -35,7 +35,6 @@
   .wrap{max-width:1100px;margin:0 auto;padding:0 28px}
   ::selection{background:var(--orange);color:#17130f}
 
-  /* NAV */
   nav{
     position:sticky;top:0;z-index:50;
     background:rgba(20,16,9,0.85);backdrop-filter:blur(10px);
@@ -55,7 +54,6 @@
   nav .links a:hover{color:var(--orange)}
   nav .links a:hover::after{width:100%}
 
-  /* HERO */
   header{padding:110px 0 90px;text-align:center;position:relative}
   .eyebrow{
     display:inline-flex;align-items:center;gap:8px;
@@ -66,7 +64,6 @@
   .eyebrow::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--orange);box-shadow:0 0 8px var(--orange);animation:pulse 2s ease infinite}
   @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
 
-  /* 3D CUBE */
   .cube-stage{
     width:140px;height:140px;margin:0 auto 38px;perspective:700px;
   }
@@ -133,7 +130,6 @@
   .btn-ghost{border-color:var(--line);color:var(--text)}
   .btn-ghost:hover{border-color:var(--orange);color:var(--orange);background:rgba(242,112,26,0.06);transform:translateY(-2px)}
 
-  /* Entrance animation - applied via JS class, safe fallback if JS fails = fully visible */
   .fade-target{opacity:1;transform:translateY(0)}
   .fade-target.fade-init{opacity:0;transform:translateY(16px)}
   .fade-target.fade-in{
@@ -141,7 +137,6 @@
     transition:opacity .7s ease, transform .7s ease;
   }
 
-  /* SCROLL REVEAL */
   .reveal{opacity:1;transform:translateY(0);transition:opacity .7s ease, transform .7s ease}
   .reveal.reveal-init{opacity:0;transform:translateY(28px)}
   .reveal.in-view{opacity:1;transform:translateY(0)}
@@ -155,7 +150,6 @@
 
   section{padding:76px 0;border-top:1px solid var(--line-soft)}
 
-  /* TOOLS GRID */
   .tools-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:18px}
   .tool-card{
     position:relative;background:var(--panel);border:1px solid var(--line);border-radius:16px;
@@ -261,7 +255,6 @@
 
 <div class="wrap">
 
-  <!-- HERO -->
   <header>
     <div class="eyebrow fade-target" data-delay="0">Est. 2026</div>
 
@@ -309,13 +302,13 @@
         <span class="arrow">Open Tool →</span>
       </a>
 
-      <div class="tool-card disabled">
-        <div class="tool-icon">🧩</div>
-        <span class="status soon">In the Forge</span>
-        <h3>Next Build</h3>
-        <p>Something new is being cooked up. Check back soon for the next MakeForge tool.</p>
-        <span class="arrow" style="color:var(--muted-dim)">Coming Soon</span>
-      </div>
+      <a href="html-tester.html" class="tool-card">
+        <div class="tool-icon">🧪</div>
+        <span class="status live">Live</span>
+        <h3>HTML Tester</h3>
+        <p>A live HTML/CSS/JS playground — test snippets with instant preview before committing them anywhere.</p>
+        <span class="arrow">Open Tool →</span>
+      </a>
 
     </div>
   </section>
@@ -341,7 +334,7 @@
         <p style="margin-bottom:16px">MakeForge is my studio for turning ideas into real, playable, usable things — from Minecraft mods and web games to browser tools and sites.</p>
         <p>No team, no red tape. Just build, ship, forge. If it's worth making, it gets made here.</p>
         <div class="stat-row">
-          <div class="stat"><div class="num" data-count="2">0</div><div class="lbl">Tools Shipped</div></div>
+          <div class="stat"><div class="num" data-count="3">0</div><div class="lbl">Tools Shipped</div></div>
           <div class="stat"><div class="num">2026</div><div class="lbl">Founded</div></div>
           <div class="stat"><div class="num">∞</div><div class="lbl">Ideas Queued</div></div>
         </div>
@@ -370,7 +363,6 @@
 (function(){
   "use strict";
 
-  // Hero entrance: content is visible by default (safe), JS just adds a nice staggered fade-in on top.
   try{
     const fadeEls = document.querySelectorAll('.fade-target');
     fadeEls.forEach(el=>{
@@ -385,11 +377,8 @@
         }, delay);
       });
     });
-  }catch(e){
-    // if anything goes wrong, content is already visible by default (fade-target base = opacity:1)
-  }
+  }catch(e){ /* content stays visible by default */ }
 
-  // Scroll-reveal for sections
   try{
     const revealEls = document.querySelectorAll('.reveal');
     revealEls.forEach(el=>el.classList.add('reveal-init'));
@@ -407,11 +396,8 @@
     } else {
       revealEls.forEach(el => el.classList.remove('reveal-init'));
     }
-  }catch(e){
-    // fail safe: sections stay visible by default (.reveal base = opacity:1)
-  }
+  }catch(e){ /* sections stay visible by default */ }
 
-  // Count-up animation for the "Tools Shipped" stat
   try{
     const counter = document.querySelector('.num[data-count]');
     if(counter){
@@ -424,7 +410,7 @@
       };
       setTimeout(step, 600);
     }
-  }catch(e){ /* non-critical, skip silently */ }
+  }catch(e){ /* non-critical */ }
 })();
 </script>
 
